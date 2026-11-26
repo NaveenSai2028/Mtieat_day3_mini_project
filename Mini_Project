@@ -1,0 +1,184 @@
+import java.util.Scanner;
+
+public class StudentManagementSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Student student = null;
+        int choice;
+
+        do {
+            System.out.println("\n===== STUDENT MANAGEMENT SYSTEM =====");
+            System.out.println("1. Add Student");
+            System.out.println("2. Display Student");
+            System.out.println("3. Enter Marks");
+            System.out.println("4. Calculate Total");
+            System.out.println("5. Calculate Average");
+            System.out.println("6. Calculate Grade");
+            System.out.println("7. Pass/Fail Result");
+            System.out.println("8. Exit");
+            System.out.print("Enter your choice: ");
+            
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Clear buffer
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Student ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter Student Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter Department: ");
+                    String dept = scanner.nextLine();
+                    
+                    student = new Student(id, name, dept);
+                    System.out.println("Student added successfully!");
+                    break;
+
+                case 2:
+                    if (student != null) {
+                        student.displayStudent();
+                    } else {
+                        System.out.println("No student found! Please add a student first (Option 1).");
+                    }
+                    break;
+
+                case 3:
+                    if (student != null) {
+                        System.out.print("Enter Subject 1 Marks: ");
+                        int m1 = scanner.nextInt();
+                        System.out.print("Enter Subject 2 Marks: ");
+                        int m2 = scanner.nextInt();
+                        System.out.print("Enter Subject 3 Marks: ");
+                        int m3 = scanner.nextInt();
+                        
+                        student.setMarks(m1, m2, m3);
+                        System.out.println("Marks saved successfully!");
+                    } else {
+                        System.out.println("Please add a student first (Option 1).");
+                    }
+                    break;
+
+                case 4:
+                    if (student != null && student.hasMarks()) {
+                        System.out.println("Total Marks: " + student.calculateTotal());
+                    } else {
+                        System.out.println("Please add a student and enter marks first.");
+                    }
+                    break;
+
+                case 5:
+                    if (student != null && student.hasMarks()) {
+                        System.out.println("Average Marks: " + student.calculateAverage());
+                    } else {
+                        System.out.println("Please add a student and enter marks first.");
+                    }
+                    break;
+
+                case 6:
+                    if (student != null && student.hasMarks()) {
+                        System.out.println("Grade: " + student.calculateGrade());
+                    } else {
+                        System.out.println("Please add a student and enter marks first.");
+                    }
+                    break;
+
+                case 7:
+                    if (student != null && student.hasMarks()) {
+                        System.out.println("Result: " + student.getResult());
+                    } else {
+                        System.out.println("Please add a student and enter marks first.");
+                    }
+                    break;
+
+                case 8:
+                    System.out.println("Exiting Student Management System. Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Please enter a number between 1 and 8.");
+            }
+        } while (choice != 8);
+
+        scanner.close();
+    }
+}
+
+class Student {
+    // Encapsulation: private variables
+    private int studentId;
+    private String name;
+    private String department;
+    private int[] marks = new int[3];
+    private boolean marksEntered = false;
+
+    // Constructor to initialize student details
+    public Student(int studentId, String name, String department) {
+        this.studentId = studentId;
+        this.name = name;
+        this.department = department;
+    }
+
+    // Method to store marks for 3 subjects
+    public void setMarks(int m1, int m2, int m3) {
+        this.marks[0] = m1;
+        this.marks[1] = m2;
+        this.marks[2] = m3;
+        this.marksEntered = true;
+    }
+
+    public boolean hasMarks() {
+        return marksEntered;
+    }
+
+    // Method to calculate total marks
+    public int calculateTotal() {
+        return marks[0] + marks[1] + marks[2];
+    }
+
+    // Method to calculate average marks
+    public double calculateAverage() {
+        return calculateTotal() / 3.0;
+    }
+
+    // Method to assign grade based on average
+    public String calculateGrade() {
+        double avg = calculateAverage();
+        if (avg >= 90 && avg <= 100) {
+            return "A+";
+        } else if (avg >= 80) {
+            return "A";
+        } else if (avg >= 70) {
+            return "B";
+        } else if (avg >= 60) {
+            return "C";
+        } else if (avg >= 50) {
+            return "D";
+        } else {
+            return "Fail";
+        }
+    }
+
+    // Method to determine Pass/Fail
+    public String getResult() {
+        return calculateAverage() >= 50 ? "PASS" : "FAIL";
+    }
+
+    // Method to display student details & report
+    public void displayStudent() {
+        System.out.println("\n===== STUDENT REPORT =====");
+        System.out.println("Student ID  : " + studentId);
+        System.out.println("Name        : " + name);
+        System.out.println("Department  : " + department);
+        
+        if (marksEntered) {
+            System.out.println("Total Marks : " + calculateTotal());
+            System.out.println("Average     : " + calculateAverage());
+            System.out.println("Grade       : " + calculateGrade());
+            System.out.println("Result      : " + getResult());
+        } else {
+            System.out.println("Marks       : Not entered yet.");
+        }
+        System.out.println("==========================");
+    }
+}
